@@ -1,12 +1,14 @@
 "use server";
 
 import { feedbackSchema } from "@/constants";
-import { db } from "@/firebase/admin";
+// import { db } from "@/firebase/admin";
+import { getAdminDb } from "@/firebase/admin";
 import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { groq } from "@ai-sdk/groq";  // ← change
 
 export async function getInterviewsByUserId(userId: string): Promise<Interview[] | null> {
+    const db = getAdminDb();
     const interviews = await db
       .collection('interviews')
       .where('userId', '==', userId)
@@ -18,9 +20,9 @@ export async function getInterviewsByUserId(userId: string): Promise<Interview[]
         ...doc.data(),
     })) as Interview[];
 }
-
 export async function getLatestInterviews(params: GetLatestInterviewsParams): Promise<Interview[] | null> {
 
+    const db = getAdminDb();
     const { userId, limit = 20 } = params;
 
     const interviews = await db
@@ -40,12 +42,14 @@ export async function getLatestInterviews(params: GetLatestInterviewsParams): Pr
 }
 
 export async function getInterviewsById(id: string): Promise<Interview | null> {
+    const db = getAdminDb();
     const interview = await db.collection('interviews').doc(id).get();
 
     return interview.data() as Interview | null;
 }
 
 export async function createFeedback(params: CreateFeedbackParams) {
+    const db = getAdminDb();
     const { interviewId, userId, transcript, feedbackId } = params;
 
     try{
@@ -125,6 +129,7 @@ const feedback = {
 
 export async function getFeedbackByInterviewId(params: GetFeedbackByInterviewIdParams): Promise<Feedback | null> {
 
+    const db = getAdminDb();
     const { interviewId, userId } = params;
 
     const feedback = await db.collection('feedback').where('interviewId', '==', interviewId).where('userId', '==', userId).limit(1).get();
@@ -172,6 +177,7 @@ export interface DashboardStats {
  
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
     // Fetch interviews
+    const db = getAdminDb();
     const interviewsSnap = await db
         .collection('interviews')
         .where('userId', '==', userId)
