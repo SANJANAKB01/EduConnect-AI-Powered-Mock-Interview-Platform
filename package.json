@@ -22,6 +22,7 @@
     "dayjs": "^1.11.13",
     "face-api.js": "^0.22.2",
     "firebase": "^11.8.1",
+    "firebase-admin": "^13.4.0",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.511.0",
     "next": "^15.5.9",
@@ -43,9 +44,12 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
-    "firebase-admin": "^14.3.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.2",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "jose": "^4.15.9",
+    "jwks-rsa": "^2.1.0"
   }
 }
