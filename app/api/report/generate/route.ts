@@ -1,4 +1,5 @@
-import { db } from "@/firebase/admin";
+// import { db } from "@/firebase/admin";
+import { getAdminDb } from "@/firebase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
@@ -6,6 +7,7 @@ import jsPDF from "jspdf";
 
 export async function POST(req: NextRequest) {
   try {
+    const db = getAdminDb();
     const { userId, userName } = await req.json();
 
     if (!userId) {
@@ -104,6 +106,7 @@ export async function POST(req: NextRequest) {
 
     let analysis: any = {};
     try {
+      const db = getAdminDb();
       const raw = aiResponse.text || "{}";
       const clean = raw.replace(/```json|```/g, "").trim();
       analysis = JSON.parse(clean);
