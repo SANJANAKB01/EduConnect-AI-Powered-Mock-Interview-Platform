@@ -1,11 +1,14 @@
 'use server';
 
-import { auth, db } from "@/firebase/admin";
+// import { auth, db } from "@/firebase/admin";
+import { getAdminAuth, getAdminDb } from "@/firebase/admin";
 import { cookies } from "next/headers";
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
 
 export async function signUp(params: SignUpParams){
+    const auth = getAdminAuth();
+    const db = getAdminDb();
     const { uid, name, email } = params;
 
     try {
@@ -44,6 +47,8 @@ export async function signUp(params: SignUpParams){
 }
 
 export async function signIn(params: SignInParams) {
+    const auth = getAdminAuth();
+    const db = getAdminDb();
     const { email, idToken } = params;
 
     try {
@@ -68,6 +73,8 @@ export async function signIn(params: SignInParams) {
 }
 
 export async function setSessionCookie(idToken: string){
+    const auth = getAdminAuth();
+    const db = getAdminDb();
     const cookieStore = await cookies();
 
     const sessionCookie = await auth.createSessionCookie(idToken, {
@@ -84,6 +91,8 @@ export async function setSessionCookie(idToken: string){
 }
 
 export async function getCurrentUser(): Promise<User | null>{
+    const auth = getAdminAuth();
+    const db = getAdminDb();
     const cookieStore = await cookies();
 
     const sessionCookie = cookieStore.get('session')?.value;
@@ -109,6 +118,8 @@ export async function getCurrentUser(): Promise<User | null>{
 }
 
 export async function isAuthenticated(){
+    const auth = getAdminAuth();
+    const db = getAdminDb();
     const user = await getCurrentUser();
 
     return !!user;
