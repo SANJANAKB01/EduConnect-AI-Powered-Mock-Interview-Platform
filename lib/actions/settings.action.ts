@@ -1,10 +1,12 @@
 'use server'
  
-import { db } from "@/firebase/admin"
+// import { db } from "@/firebase/admin"
+import { getAdminDb } from "@/firebase/admin";
 import { revalidatePath } from "next/cache"
  
 export async function updateUserProfile(userId: string, data: { name?: string }) {
-  try {
+ const db = getAdminDb(); 
+ try {
     await db.collection('users').doc(userId).update({
       ...(data.name && { name: data.name }),
     })
